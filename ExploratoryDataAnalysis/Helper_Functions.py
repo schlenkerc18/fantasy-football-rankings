@@ -20,6 +20,7 @@ te_2019 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Footba
 te_2020 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/TeStats2020.csv")
 
 # final 2020 o-line rankings according to ProFootballFocus(PFF)
+# https://www.pff.com/news/nfl-final-2020-offensive-line-rankings
 off_line_ranks = {'CLE': 1, 'GB': 2, 'LAR': 3, 'NE': 4, 'TB': 5, 'WAS': 6, 'IND': 7,
                   'NO': 8, 'SF': 9, 'BUF': 10, 'KC': 11, 'ARI': 12, 'DET': 13, 
                   'SEA': 14, 'TEN': 15, 'BAL': 16, 'PIT': 17, 'CAR': 18, 'PHI': 19,

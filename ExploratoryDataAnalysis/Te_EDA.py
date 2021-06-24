@@ -12,37 +12,25 @@ import seaborn as sns
 sns.set()
 
 from sklearn.linear_model import LinearRegression
+import Helper_Functions as hf
 
 # reading in CSV files
 df_2019 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/TeStats2019.csv")
 df_2020 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/TeStats2020.csv")
 
-# dictionary comprehension for 2019 qbs
-# only want to add rbs who scored fantasy points
-te_dict = {df_2019['PLAYER'].iloc[i]: [df_2019['FPTS/G'].iloc[i]] for i in range(len(df_2019))
-           if df_2019['FPTS/G'].iloc[i] > 0}
+# creating dictionary for tes who scored fantasy points in 2019
+te_dict = hf.get_player_season(df_2019)
 
 # since I want to create a linear regression, I will need players to have stats
-# for the 2019 season, so I only want to add players stats who are already in the
-# dictionary
+# for the 2019 season, so I only want to add players stats who are already in the dictionary
 # adding 2020 ftps/g to dictionary
-for i in range(len(df_2020)):
-    if df_2020['PLAYER'].iloc[i] in te_dict:
-        te_dict[df_2020['PLAYER'].iloc[i]].append(df_2020['FPTS/G'].iloc[i])
+te_dict = hf.add_season(te_dict, df_2020)
         
 # create new dictionary that only holds data for players with more than one season
-new_te_dict = {x:y for x,y in te_dict.items() if len(y) > 1}
+new_te_dict = hf.clean_dictionary(te_dict)
 
-# turning dictionary back into lists in order to create a pandas dataframe
-# turn keys in qb_dict into list, remove trailing whitespace
-players = [x.rstrip() for x in new_te_dict]
-players = pd.Series(players)
-
-fpts_2019 = [x[0] for x in new_te_dict.values()]
-fpts_2019 = pd.Series(fpts_2019)
-
-fpts_2020 = [x[1] for x in new_te_dict.values()]
-fpts_2020 = pd.Series(fpts_2020)
+# turning dictionary into series in order to create a pandas dataframe
+players, fpts_2019, fpts_2020 = hf.dict_to_series(new_te_dict)
 
 data = {'Players': players, '2019 Fpts/G': fpts_2019, '2020 Fpts/G': fpts_2020}
 df = pd.DataFrame(data)
