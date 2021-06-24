@@ -6,6 +6,7 @@ Created on Wed Jun 23 13:13:27 2021
 """
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt 
 import seaborn as sns
 sns.set()
@@ -63,6 +64,12 @@ reg_score = reg.score(x_matrix, y)
 
 # Intercept
 reg_intercept = reg.intercept_
+
+# making predctions
+def predict_ppg(x):
+    score = np.array([[x]])
+    print(reg.predict(score))
+
 
 # plotting regression line
 plt.scatter(x,y)

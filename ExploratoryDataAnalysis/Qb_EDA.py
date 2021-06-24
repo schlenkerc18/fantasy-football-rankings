@@ -66,6 +66,11 @@ reg_score = reg.score(x_matrix, y)
 # Intercept
 reg_intercept = reg.intercept_
 
+# making predctions
+def predict_ppg(x):
+    score = np.array([[x]])
+    print(reg.predict(score))
+
 # plotting regression line
 plt.scatter(x,y)
 yhat = reg.coef_ * x + reg_intercept
