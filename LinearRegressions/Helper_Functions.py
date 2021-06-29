@@ -49,9 +49,10 @@ def add_season(my_dict, df):
             my_dict[df['PLAYER'].iloc[i]].append(df['FPTS/G'].iloc[i])
     return my_dict
 
-# function removes players from a dictionary if they played only one season
-def clean_dictionary(my_dict):
-    new_dict = {x:y for x,y in my_dict.items() if len(y) > 1}
+# function removes players from a dictionary if they played less than amount 
+# of given seasons
+def clean_dictionary(my_dict, seasons):
+    new_dict = {x:y for x,y in my_dict.items() if len(y) > seasons}
     return new_dict
 
 # function takes keys and values and returns pandas Series
@@ -68,6 +69,42 @@ def dict_to_series(my_dict):
     fpts_2020 = pd.Series(fpts_2020)
     
     return keys, fpts_2019, fpts_2020
+
+# this function was added to remove players who are backups from a dictionary
+# the intent of this is to remove most players who are not starters for successive 
+# seasons from the linear regression
+def remove_backups(my_dict):
+    new_dict = {}
+    add_player = True
+    for x,y in my_dict.items():
+        for i in range(len(y)):
+            if y[i] < 5:
+                add_player = False
+        if add_player == True:
+            new_dict[x] = y
+        add_player = True
+    
+    return new_dict
+    
+    new_dict = {x:y for (x,y) in my_dict if my_dict[x] > 5}
+    return new_dict
+
+# same as dict_to_series function, but returns 4 series
+def dict_to_series_2(my_dict):
+    # r.strip() removes trailing whitespace
+    keys = [x.rstrip() for x in my_dict]
+    keys = pd.Series(keys)
+    
+    fpts_2018 = [x[0] for x in my_dict.values()]
+    fpts_2018 = pd.Series(fpts_2018)
+    
+    fpts_2019 = [x[1] for x in my_dict.values()]
+    fpts_2019 = pd.Series(fpts_2019)
+    
+    fpts_2020 = [x[2] for x in my_dict.values()]
+    fpts_2020 = pd.Series(fpts_2020)
+    
+    return keys, fpts_2018, fpts_2019, fpts_2020
     
 # filling o_line list with ratings
 # off_line_rank = []
