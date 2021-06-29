@@ -16,6 +16,7 @@ from sklearn.linear_model import LinearRegression
 import Helper_Functions as hf
 
 # reading in CSV files
+df_2018 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/RbStats2018.csv")
 df_2019 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/RbStats2019.csv")
 df_2020 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/RbStats2020.csv")
 
@@ -28,7 +29,10 @@ rb_dict = hf.get_player_season(df_2019)
 rb_dict = hf.add_season(rb_dict, df_2020)
         
 # create new dictionary that only holds data for players with more than one season
-new_rb_dict = hf.clean_dictionary(rb_dict)
+new_rb_dict = hf.clean_dictionary(rb_dict, 1)
+
+# removing playes who scored less than 5 points in any season from dictionary
+new_rb_dict = hf.remove_backups(new_rb_dict, 3)
 
 # turning dictionary back into series in order to create a pandas dataframe
 players, fpts_2019, fpts_2020 = hf.dict_to_series(new_rb_dict)
@@ -66,3 +70,42 @@ fig = plt.plot(x, yhat, lw = 2, c = 'orange')
 plt.xlabel('2019 Fpts/G', fontsize = 15, fontweight = 'bold')
 plt.ylabel('2020 Fpts/G', fontsize = 15, fontweight = 'bold')
 plt.show()
+
+# creating new regression using both 2018, 2019 seasons as inputs
+# creating dictionary with 2018 rbs who scored more than 0 points
+test_rb_dict = hf.get_player_season(df_2018)
+
+# adding 2019, 2020 seasons to dictionary
+test_rb_dict = hf.add_season(test_rb_dict, df_2019)
+test_rb_dict = hf.add_season(test_rb_dict, df_2020)
+
+# removing players who played less than 3 seasons
+test_rb_dict = hf.clean_dictionary(test_rb_dict, 2)
+
+# removing players who scored less than 5 points per game, these are generally
+# backups
+test_rb_dict = hf.remove_backups(test_rb_dict, 5)
+
+# turning dictionary back into series in order to create a pandas dataframe
+players, fpts_2018, fpts_2019, fpts_2020 = hf.dict_to_series_2(test_rb_dict)
+
+# creating dataframe 
+test_data = {'Players': players, '2018 Fpts/G': fpts_2018, 
+        '2019 Fpts/G': fpts_2019, '2020 Fpts/G': fpts_2020}
+test_df = pd.DataFrame(test_data)
+
+# running multiple linear regression
+# creating the regression 
+x = test_df[['2018 Fpts/G', '2019 Fpts/G']] # x is the feauture var
+y = test_data['2020 Fpts/G'] # y is the output
+
+# running the regression
+test_reg = LinearRegression()
+
+test_reg.fit(x, y)
+
+# r-squared
+test_reg_score = test_reg.score(x, y)
+
+# Intercept
+test_reg_intercept = reg.intercept_
