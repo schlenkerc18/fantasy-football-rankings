@@ -73,12 +73,12 @@ def dict_to_series(my_dict):
 # this function was added to remove players who are backups from a dictionary
 # the intent of this is to remove most players who are not starters for successive 
 # seasons from the linear regression
-def remove_backups(my_dict):
+def remove_backups(my_dict, num):
     new_dict = {}
     add_player = True
     for x,y in my_dict.items():
         for i in range(len(y)):
-            if y[i] < 5:
+            if y[i] < num:
                 add_player = False
         if add_player == True:
             new_dict[x] = y

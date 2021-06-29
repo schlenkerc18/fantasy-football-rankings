@@ -35,7 +35,7 @@ new_qb_dict = hf.clean_dictionary(qb_dict, 1)
 
 # removing players who scored less than 5 points per game in 2019 or 2020
 # from the dictionary
-new_qb_dict = hf.remove_backups(new_qb_dict)
+new_qb_dict = hf.remove_backups(new_qb_dict, 5)
 
 # turning dictionary back into series in order to create a pandas dataframe
 players, fpts_2019, fpts_2020 = hf.dict_to_series(new_qb_dict)
@@ -88,7 +88,7 @@ test_qb_dict = hf.clean_dictionary(test_qb_dict, 2)
 
 # removing players who scored less than 5 points per game, these are generally
 # backups
-test_qb_dict = hf.remove_backups(test_qb_dict)
+test_qb_dict = hf.remove_backups(test_qb_dict, 5)
 
 # turning dictionary back into series in order to create a pandas dataframe
 players, fpts_2018, fpts_2019, fpts_2020 = hf.dict_to_series_2(test_qb_dict)
