@@ -32,17 +32,20 @@ TE Factors:
 
 Current state of project:
   So far, I have pulled statistics for the 2018, 2019, and 2020 seasons.  I have created simple linear regresssions and multiple linear regressions for each of the posistions listed above.  For the QB position and TE positions, recent seasons are not a reliable predictor of future output.  However, recent seasons for the RB, and WR positions seem to be a generally reliable predictor of future output, especially for the WR position.
-  r^2 for simple linear regressions for each position (2019 is used as input, 2020 is dependent variable)
+  
+r^2 for simple linear regressions for each position (2019 is used as input, 2020 is dependent variable)
     QB: .32    
     RB: .42
     WR: .31
     TE: .33
     
-  r^2 values for the multiple linear regressions for each position (2018 and 2019 are used as input variables, 2020 is the dependent variable)
+  
+r^2 values for the multiple linear regressions for each position (2018 and 2019 are used as input variables, 2020 is the dependent variable)
     QB: .32
     RB: .63
     WR: .46
     TE: .35
+    
     
 To-Do List:
   1. Create regression equations for each regression
