@@ -34,6 +34,11 @@ def get_player_team(string):
     end = string.find(')')
     return string[start+1:end]
 
+# function returns the player without the team
+def get_player(string):
+    end = string.find('(')
+    return string[0:end]
+    
 # function that returns dictionary of players with their respective fantasy points
 # for that season, only includes players who scored points
 def get_player_season(df):
@@ -47,6 +52,13 @@ def add_season(my_dict, df):
     for i in range(len(df)):
         if df['PLAYER'].iloc[i] in my_dict:
             my_dict[df['PLAYER'].iloc[i]].append(df['FPTS/G'].iloc[i])
+    return my_dict
+
+# same as add_season function, but gets string of player without team
+def add_season_2(my_dict, df):
+    for i in range(len(df)):
+        if get_player(df['PLAYER'].iloc[i]) in my_dict:
+            my_dict[get_player(df['PLAYER'].iloc[i])].append(df['FPTS/G'].iloc[i])
     return my_dict
 
 # function removes players from a dictionary if they played less than amount 
