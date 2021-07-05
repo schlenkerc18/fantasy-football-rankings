@@ -19,15 +19,6 @@ wr_2020 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Footba
 te_2019 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/TeStats2019.csv")
 te_2020 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/TeStats2020.csv")
 
-# final 2020 o-line rankings according to ProFootballFocus(PFF)
-# https://www.pff.com/news/nfl-final-2020-offensive-line-rankings
-off_line_ranks = {'CLE': 1, 'GB': 2, 'LAR': 3, 'NE': 4, 'TB': 5, 'WAS': 6, 'IND': 7,
-                  'NO': 8, 'SF': 9, 'BUF': 10, 'KC': 11, 'ARI': 12, 'DET': 13, 
-                  'SEA': 14, 'TEN': 15, 'BAL': 16, 'PIT': 17, 'CAR': 18, 'PHI': 19,
-                  'CHI': 20, 'ATL': 21, 'JAC': 22, 'HOU': 23, 'LV': 24, 'DEN': 25,
-                  'MIN': 26, 'DAL': 27, 'MIA': 28, 'NYJ': 29, 'CIN': 30, 'NYG':31,
-                  'LAC': 32, 'FA': 33}
-
 # function to return string representation of a player's team
 def get_player_team(string):
     start = string.find('(')
@@ -110,12 +101,3 @@ def dict_to_series_2(my_dict):
     fpts_2020 = pd.Series(fpts_2020)
     
     return keys, fpts_2018, fpts_2019, fpts_2020
-    
-# filling o_line list with ratings
-# off_line_rank = []
-# for i in range(len(players)):
-#     p = get_player_team(players[i])
-#     if (off_line_ranks[p] <= 16):
-#         off_line_rank.append(1)
-#     else:
-#         off_line_rank.append(0)
