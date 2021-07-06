@@ -13,8 +13,9 @@ sns.set()
 
 from sklearn.linear_model import LinearRegression
 
-# importing module with helper functions
+# importing modules with helper functions
 import Helper_Functions as hf
+import Pos_Group_Rankings as pgr
 
 # reading in CSV files
 df_2018 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/QbStats2018.csv")
@@ -39,9 +40,36 @@ new_qb_dict = hf.remove_backups(new_qb_dict, 5)
 
 # turning dictionary back into series in order to create a pandas dataframe
 players, fpts_2019, fpts_2020 = hf.dict_to_series(new_qb_dict)
+
+# finding corresponding 2019 team for each player in our series
+player_teams = []
+for player in players:
+    for i in range(len(df_2019)):
+        if player == hf.get_player(df_2019.loc[i].PLAYER):
+            player_teams.append(hf.get_player_team(df_2019.loc[i].PLAYER))
+            
+# finding corresponding 2020 team for each player in our series
+player_teams_20 = []
+for player in players:
+    for i in range(len(df_2020)):
+        if player == hf.get_player(df_2020.loc[i].PLAYER):
+            player_teams_20.append(hf.get_player_team(df_2020.loc[i].PLAYER))
+        
+
+# turning list of player teams into series
+player_teams = pd.Series(player_teams)      
+player_teams_20 = pd.Series(player_teams_20)  
+
+# getting relative o-line diff
+o_line_diff = []
+for i in range(len(player_teams)):
+    o_line_diff.append(pgr.get_rel_diff(player_teams[i], player_teams_20[i]))
+o_line_diff = pd.Series(o_line_diff)
    
 # creating dataframe 
-data = {'Players': players, '2019 Fpts/G': fpts_2019, '2020 Fpts/G': fpts_2020}
+data = {'Players': players, '19 TM': player_teams, '20 TM':player_teams_20,
+        'O-Line Rank Change':o_line_diff,'2019 Fpts/G': fpts_2019, 
+        '2020 Fpts/G': fpts_2020}
 df = pd.DataFrame(data)
 
 # running simple linear regression
@@ -66,6 +94,10 @@ reg_intercept = reg.intercept_
 def predict_ppg(x):
     score = np.array([[x]])
     print(reg.predict(score))
+    
+# simple function that returns the predicted ppg by 17 (games in upcoming season)
+def total_pts(x):
+    return x * 17
 
 # plotting regression line
 plt.scatter(x,y)
