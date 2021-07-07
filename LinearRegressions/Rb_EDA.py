@@ -111,8 +111,8 @@ player_teams_20 = pd.Series(player_teams_20)
 
 # creating dataframe 
 test_data = {'Players': players, '19 TM':player_teams, '20 TM': player_teams_20,
-             'O-Line Rank Change':o_line_diff, '2018 Fpts/G': fpts_2018, 
-             '2019 Fpts/G': fpts_2019, '2020 Fpts/G': fpts_2020}
+             '2018 Fpts/G': fpts_2018, '2019 Fpts/G': fpts_2019, 
+             '2020 Fpts/G': fpts_2020}
 test_df = pd.DataFrame(test_data)
 
 # running multiple linear regression
