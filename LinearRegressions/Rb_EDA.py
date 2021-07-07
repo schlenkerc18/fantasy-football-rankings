@@ -14,6 +14,7 @@ sns.set()
 from sklearn.linear_model import LinearRegression
 
 import Helper_Functions as hf
+import Pos_Group_Rankings as pgr
 
 # reading in CSV files
 df_2018 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/RbStats2018.csv")
@@ -89,14 +90,40 @@ test_rb_dict = hf.remove_backups(test_rb_dict, 5)
 # turning dictionary back into series in order to create a pandas dataframe
 players, fpts_2018, fpts_2019, fpts_2020 = hf.dict_to_series_2(test_rb_dict)
 
+# finding corresponding 2019 team for each player in our series
+player_teams = []
+for player in players:
+    for i in range(len(df_2019)):
+        if player == hf.get_player(df_2019.loc[i].PLAYER):
+            player_teams.append(hf.get_player_team(df_2019.loc[i].PLAYER))
+            
+# finding corresponding 2020 team for each player in our series
+player_teams_20 = []
+for player in players:
+    for i in range(len(df_2020)):
+        if player == hf.get_player(df_2020.loc[i].PLAYER):
+            player_teams_20.append(hf.get_player_team(df_2020.loc[i].PLAYER))
+        
+
+# turning list of player teams into series
+player_teams = pd.Series(player_teams)      
+player_teams_20 = pd.Series(player_teams_20)  
+
+# getting relative o-line diff
+o_line_diff = []
+for i in range(len(player_teams)):
+    o_line_diff.append(pgr.get_oline_diff(player_teams[i], player_teams_20[i]))
+o_line_diff = pd.Series(o_line_diff)
+
 # creating dataframe 
-test_data = {'Players': players, '2018 Fpts/G': fpts_2018, 
-        '2019 Fpts/G': fpts_2019, '2020 Fpts/G': fpts_2020}
+test_data = {'Players': players, '19 TM':player_teams, '20 TM': player_teams_20,
+             'O-Line Rank Change':o_line_diff, '2018 Fpts/G': fpts_2018, 
+             '2019 Fpts/G': fpts_2019, '2020 Fpts/G': fpts_2020}
 test_df = pd.DataFrame(test_data)
 
 # running multiple linear regression
 # creating the regression 
-x = test_df[['2018 Fpts/G', '2019 Fpts/G']] # x is the feauture var
+x = test_df[['2018 Fpts/G', '2019 Fpts/G', 'O-Line Rank Change']] # x is the feauture var
 y = test_data['2020 Fpts/G'] # y is the output
 
 # running the regression
