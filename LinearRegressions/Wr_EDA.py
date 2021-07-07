@@ -109,28 +109,15 @@ for player in players:
 player_teams = pd.Series(player_teams)      
 player_teams_20 = pd.Series(player_teams_20)  
 
-# getting relative o-line diff
-o_line_diff = []
-for i in range(len(player_teams)):
-    o_line_diff.append(pgr.get_oline_diff(player_teams[i], player_teams_20[i]))
-o_line_diff = pd.Series(o_line_diff)
-
-# getting relative diff for QB
-qb_diff = []
-for i in range(len(player_teams)):
-    qb_diff.append(pgr.get_qb_diff(player_teams[i], player_teams_20[i]))
-qb_diff = pd.Series(qb_diff)
-
 # creating dataframe 
 test_data = {'Players': players, '19 TM': player_teams, '20 TM': player_teams_20,
-             'QB Rank Change': qb_diff, 'O-Line Rank Change': o_line_diff,
              '2018 Fpts/G': fpts_2018, '2019 Fpts/G': fpts_2019,
              '2020 Fpts/G': fpts_2020}
 test_df = pd.DataFrame(test_data)
 
 # running multiple linear regression
 # creating the regression 
-x = test_df[['2018 Fpts/G', '2019 Fpts/G', 'QB Rank Change', 'O-Line Rank Change']] # x is the feauture var
+x = test_df[['2018 Fpts/G', '2019 Fpts/G']] # x is the feauture var
 y = test_data['2020 Fpts/G'] # y is the output
 
 # running the regression
