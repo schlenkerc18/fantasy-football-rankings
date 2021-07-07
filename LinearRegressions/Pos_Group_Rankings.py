@@ -69,4 +69,4 @@ def get_wr_diff(s1, s2):
 
 # function returns difference in qb rank from 2019 to 2020
 def get_qb_diff(s1, s2):
-    return qb_ranks_19[s1], qb_ranks_20[s2]
+    return qb_ranks_19[s1] - qb_ranks_20[s2]
