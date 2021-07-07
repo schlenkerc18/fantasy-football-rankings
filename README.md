@@ -9,26 +9,22 @@ QB Factors:
   1. Recent seasons
   2. Rating of WR's
   3. Rating of offensive line
-  4. Rating of offensive play caller
 
 RB Factors: 
   1. Recent seasons
   2. Rating of offensive line
   3. Rating of QB
-  4. Rating of offensive play caller
 
 WR Factors:
   1. Recent seasons
   2. Rating of QB
   3. Rating of offensive line
-  4. Rating of offensive play caller
 
 TE Factors:
   1. Recent Seasons
   2. Rating of QB
   3. Rating of WRs
-  4. Rating of offensive player-caller
-  5. Rating of offensive line
+  4. Rating of offensive line
 
 Current state of project:
   So far, I have pulled statistics for the 2018, 2019, and 2020 seasons.  I have created simple linear regresssions and multiple linear regressions for each of the posistions listed above.  For the QB position and TE positions, recent seasons are not a reliable predictor of future output.  However, recent seasons for the RB, and WR positions seem to be a generally reliable predictor of future output, especially for the WR position.
