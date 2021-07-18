@@ -12,6 +12,7 @@ import seaborn as sns
 sns.set()
 
 from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import f_regression
 
 # importing modules with helper functions
 import Helper_Functions as hf
@@ -139,8 +140,7 @@ test_df = pd.DataFrame(test_data)
 
 # running multiple linear regression
 # creating the regression 
-x = test_df[['2018 Fpts/G', '2019 Fpts/G', 'O-Line Rank Change',
-             'WR Group Rank Change']] # x is the feauture var
+x = test_df[['2019 Fpts/G', 'WR Group Rank Change']] # x is the feauture var
 y = test_data['2020 Fpts/G'] # y is the output
 
 # running the regression
@@ -153,3 +153,14 @@ test_reg_score = test_reg.score(x, y)
 
 # Intercept
 test_reg_intercept = reg.intercept_
+
+# determining effect of each of the regressors
+f_regression(x,y)
+
+p_vals = f_regression(x,y)[1]
+
+# creating summary table for coefficients and p-values
+reg_summary = pd.DataFrame(data = x.columns.values, columns = ['Features'])
+
+reg_summary['Coefficients'] = test_reg.coef_
+reg_summary['p-values'] = p_vals.round(3)
