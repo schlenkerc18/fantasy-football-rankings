@@ -140,8 +140,7 @@ test_df = pd.DataFrame(test_data)
 
 # running multiple linear regression
 # creating the regression 
-x = test_df[['2018 Fpts/G', '2019 Fpts/G', 'O-Line Rank Change',
-             'WR Group Rank Change']] # x is the feauture var
+x = test_df[['2019 Fpts/G', 'WR Group Rank Change']] # x is the feauture var
 y = test_data['2020 Fpts/G'] # y is the output
 
 # running the regression
