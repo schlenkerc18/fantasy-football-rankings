@@ -12,6 +12,7 @@ import seaborn as sns
 sns.set()
 
 from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import f_regression
 
 import Helper_Functions as hf
 import Pos_Group_Rankings as pgr
@@ -130,3 +131,14 @@ test_reg_score = test_reg.score(x, y)
 
 # Intercept
 test_reg_intercept = reg.intercept_
+
+# determining effect of each of the regressors
+f_regression(x,y)
+
+p_vals = f_regression(x,y)[1]
+
+# creating summary table for coefficients and p-values
+reg_summary = pd.DataFrame(data = x.columns.values, columns = ['Features'])
+
+reg_summary['Coefficients'] = test_reg.coef_
+reg_summary['p-values'] = p_vals.round(3)
