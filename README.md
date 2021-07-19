@@ -6,9 +6,8 @@ I plan to model my 2021 projections based on several factors including statistic
 For the time being, I will only focus on offensive players.  Kickers and defenses will not be included in this ranked list.
 
 QB Factors:
-  1. Past Two Seasons
+  1. 2019 Season
   2. Rating of WR's
-  3. Rating of offensive line
 
 RB Factors: 
   1. Past Two Seasons
@@ -32,7 +31,7 @@ r^2 for simple linear regressions for each position (2019 is used as input, 2020
   
 r^2 values for the multiple linear regressions for each position (Feautures of multiple linear regression are listed above for each position)
 
-    QB: .43
+    QB: .25
     RB: .63
     WR: .46
     TE: .35
