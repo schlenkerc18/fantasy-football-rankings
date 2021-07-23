@@ -35,8 +35,3 @@ r^2 values for the multiple linear regressions for each position (Feautures of m
     RB: .63
     WR: .46
     TE: .35
-    
-    
-To-Do List:
-  1. Create regression equations for each regression
-  2. Fix overfitting problem (regressions are ran on all data, need to run regressions on ~80% of data to avoid overfitting problem)
