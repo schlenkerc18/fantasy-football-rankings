@@ -13,99 +13,39 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-# scraping 2020 WR fantasy stats
-url = requests.get('https://www.fantasypros.com/nfl/stats/te.php?year=2020')
-src = url.content
-soup = BeautifulSoup(src, 'html.parser')
-
 # create column names
 columns = ['RANK', 'PLAYER', 'REC', 'TGT', 'YDS', 'Y/R', 'LG', '20+', 'TD', 
           'ATT', 'YDS', 'TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN']
 
-# create an empty dataframe with column names
-final_2020_df = pd.DataFrame(columns = columns)
+def scrape_data(year):
+    url = requests.get(f'https://www.fantasypros.com/nfl/stats/te.php?year={year}')
+    src = url.content
+    soup = BeautifulSoup(src, 'html.parser')
+    
+    final_df = pd.DataFrame(columns = columns)
 
-# pull in player rows
-players = soup.find_all('tr', attrs = {'class': re.compile('mpb-player-')})
-
-for player in players:
+    # pull in player rows
+    players = soup.find_all('tr', attrs = {'class': re.compile('mpb-player-')})
+    
+    for player in players:
+            
+        # get the stats for each player
+        stats = [stat.get_text() for stat in player.find_all('td')]
         
-    # get the stats for each player
-    stats = [stat.get_text() for stat in player.find_all('td')]
-    
-    # create a dataframe for the single player's stats
-    temp_df = pd.DataFrame(stats).transpose()
-    temp_df.columns = columns
-    
-    # Join the single player's stats with the overall dataset
-    final_2020_df = pd.concat([final_2020_df, temp_df], ignore_index = True)
-    
-# export to csv
-final_2020_df.to_csv(r"TeStats2020.csv", 
-                index = False, sep = ',', encoding = 'utf-8')
-
-# repeat for 2018, 2019
-# not using a for loop here because I want to save each season 
-# as a separate csv file
-
-# scraping 2018
-url = requests.get('https://www.fantasypros.com/nfl/stats/te.php?year=2018')
-src = url.content
-soup = BeautifulSoup(src, 'html.parser')
-
-# create column names
-columns = ['RANK', 'PLAYER', 'REC', 'TGT', 'YDS', 'Y/R', 'LG', '20+', 'TD', 
-          'ATT', 'YDS', 'TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN']
-
-# create an empty dataframe with column names
-final_2018_df = pd.DataFrame(columns = columns)
-
-# pull in player rows
-players = soup.find_all('tr', attrs = {'class': re.compile('mpb-player-')})
-
-for player in players:
+        # create a dataframe for the single player's stats
+        temp_df = pd.DataFrame(stats).transpose()
+        temp_df.columns = columns
         
-    # get the stats for each player
-    stats = [stat.get_text() for stat in player.find_all('td')]
-    
-    # create a dataframe for the single player's stats
-    temp_df = pd.DataFrame(stats).transpose()
-    temp_df.columns = columns
-    
-    # Join the single player's stats with the overall dataset
-    final_2018_df = pd.concat([final_2018_df, temp_df], ignore_index = True)
-    
-# export to csv
-final_2018_df.to_csv(r"TeStats2018.csv", 
-                index = False, sep = ',', encoding = 'utf-8')
-
-# scraping 2019
-url = requests.get('https://www.fantasypros.com/nfl/stats/te.php?year=2019')
-src = url.content
-soup = BeautifulSoup(src, 'html.parser')
-
-# create column names
-columns = ['RANK', 'PLAYER', 'REC', 'TGT', 'YDS', 'Y/R', 'LG', '20+', 'TD', 
-          'ATT', 'YDS', 'TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN']
-
-# create an empty dataframe with column names
-final_2019_df = pd.DataFrame(columns = columns)
-
-# pull in player rows
-players = soup.find_all('tr', attrs = {'class': re.compile('mpb-player-')})
-
-for player in players:
+        # Join the single player's stats with the overall dataset
+        final_df = pd.concat([final_df, temp_df], ignore_index = True)
         
-    # get the stats for each player
-    stats = [stat.get_text() for stat in player.find_all('td')]
+    csv_name = 'TeStats' + year + '.csv'
+    # export to csv
+    final_df.to_csv(csv_name, 
+                    index = False, sep = ',', encoding = 'utf-8')
     
-    # create a dataframe for the single player's stats
-    temp_df = pd.DataFrame(stats).transpose()
-    temp_df.columns = columns
-    
-    # Join the single player's stats with the overall dataset
-    final_2019_df = pd.concat([final_2019_df, temp_df], ignore_index = True)
-    
-# export to csv
-final_2019_df.to_csv(r"TeStats2019.csv", 
-                index = False, sep = ',', encoding = 'utf-8')
+# create list of years to scrape, then call function on each year
+years_to_scrape = ['2018', '2019', '2020', '2021']
+
+for year in years_to_scrape:
+    scrape_data(year)

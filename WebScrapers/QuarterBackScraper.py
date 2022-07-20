@@ -12,11 +12,6 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-# scraping 2020 Qb fantasy stats
-url = requests.get('https://www.fantasypros.com/nfl/stats/qb.php?year=2020')
-src = url.content
-soup = BeautifulSoup(src, 'html.parser')
-
 # create column names
 columns = ['RANK', 'PLAYER', 'CMP', 'ATT', 'PCT', 'YDS', 'Y/A', 'TD', 'INT', 
           'SACKS', 'ATT', 'YDS', 'TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN']
@@ -46,8 +41,7 @@ def scrape_data(year):
         
     csv_name = 'QbStats' + year + '.csv'
     # export to csv
-    final_df.to_csv(csv_name, 
-                    index = False, sep = ',', encoding = 'utf-8')
+    final_df.to_csv(csv_name, index = False, sep = ',', encoding = 'utf-8')
     
 # create list of years to scrape, then call function on each year
 years_to_scrape = ['2018', '2019', '2020', '2021']
