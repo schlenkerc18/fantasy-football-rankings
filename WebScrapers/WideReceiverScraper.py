@@ -28,7 +28,7 @@ def scrape_data(year):
     players = soup.find_all('tr', attrs = {'class': re.compile('mpb-player-')})
     
     for player in players:
-            
+
         # get the stats for each player
         stats = [stat.get_text() for stat in player.find_all('td')]
         
