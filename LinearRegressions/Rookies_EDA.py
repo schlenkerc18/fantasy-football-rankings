@@ -13,9 +13,9 @@ sns.set()
 
 import Helper_Functions as hf
 
-rb_df_18 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/RbStats2018.csv")
-rb_df_19 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/RbStats2019.csv")
-rb_df_20 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/RbStats2020.csv")
+rb_df_18 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/StatFiles/RbStats2018.csv")
+rb_df_19 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/StatFiles/RbStats2019.csv")
+rb_df_20 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/StatFiles/RbStats2020.csv")
 # Analyzing jump from 1st year to 2nd year for RBs
 rookie_rbs_18 = ['Saquon Barkley ', 'Nick Chubb ', 'Phillip Lindsay ', 
                  'Kerryon Johnson ', 'Sony Michel ', 'Royce Freeman ',

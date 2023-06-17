@@ -18,9 +18,9 @@ import Helper_Functions as hf
 import Pos_Group_Rankings as pgr
 
 # reading in CSV files
-df_2018 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/WrStats2018.csv")
-df_2019 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/WrStats2019.csv")
-df_2020 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/WebScrapers/WrStats2020.csv")
+df_2018 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/StatFiles/WrStats2018.csv")
+df_2019 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/StatFiles/WrStats2019.csv")
+df_2020 = pd.read_csv("C:/Users/Schlenker18/Documents/GitHub/2021-Fantasy-Football-Rankings/StatFiles/WrStats2020.csv")
 
 # creating dictionary for wrs who scored fantasy points in 2019
 wr_dict = hf.get_player_season(df_2019)
