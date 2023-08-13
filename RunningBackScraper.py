@@ -34,10 +34,10 @@ def scrape_data(year, columns):
 if __name__ == '__main__':
     # create column names
     columns = ['RANK', 'PLAYER', 'ATT', 'YDS', 'Y/A', 'LG', '20+', 'TD', 'REC',
-               'TGT', 'YDS', 'Y/R', 'TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN', 'Year']
+               'TGT', 'REC_YDS', 'Y/R', 'REC_TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN', 'Year']
 
     # list of years to scrape
-    years_to_scrape = ['2018', '2019', '2020', '2021', '2022', '2023']
+    years_to_scrape = ['2018', '2019', '2020', '2021', '2022']
 
     # create dataframe to append to
     df = pd.DataFrame(columns=columns)
