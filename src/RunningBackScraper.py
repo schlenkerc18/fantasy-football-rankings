@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 
 def scrape_data(year, columns):
-    url = requests.get(f'https://www.fantasypros.com/nfl/stats/te.php?year={year}')
+    url = requests.get(f'https://www.fantasypros.com/nfl/stats/rb.php?year={year}')
     src = url.content
     soup = BeautifulSoup(src, 'html.parser')
     
@@ -26,18 +26,18 @@ def scrape_data(year, columns):
         
         # Join the single player's stats with the overall dataset
         final_df = pd.concat([final_df, temp_df], ignore_index = True)
-        
+
     return final_df
 
 
 
 if __name__ == '__main__':
     # create column names
-    columns = ['RANK', 'PLAYER', 'REC', 'TGT', 'YDS', 'Y/R', 'LG', '20+', 'TD',
-               'RUSH_ATT', 'RUSH_YDS', 'RUSH_TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN', 'Year']
+    columns = ['RANK', 'PLAYER', 'ATT', 'YDS', 'Y/A', 'LG', '20+', 'TD', 'REC',
+               'TGT', 'REC_YDS', 'Y/R', 'REC_TD', 'FL', 'G', 'FPTS', 'FPTS/G', 'OWN', 'Year']
 
-    # create list of years to scrape, then call function on each year
-    years_to_scrape = ['2018', '2019', '2020', '2021', '2022']
+    # list of years to scrape
+    years_to_scrape = ['2018', '2019', '2020', '2021', '2022', '2023', '2024']
 
     # create dataframe to append to
     df = pd.DataFrame(columns=columns)
@@ -46,4 +46,4 @@ if __name__ == '__main__':
         curr_df = scrape_data(year, columns)
         df = pd.concat([df, curr_df], ignore_index=True)
 
-    df.to_csv("./StatFiles/te_stats.csv", index=False)
+    df.to_csv("./StatFiles/rb_stats.csv", index=False)
