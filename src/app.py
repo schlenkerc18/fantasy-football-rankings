@@ -358,13 +358,11 @@ def get_ai_response(user_message):
     """Get response from OpenAI API"""
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5-nano",
             messages=[
                 {"role": "system", "content": "You are a helpful fantasy football assistant. Answer questions about fantasy football, player analysis, draft strategy, and general football knowledge. Be concise and informative."},
                 {"role": "user", "content": user_message}
-            ],
-            temperature=0.7,
-            max_tokens=500
+            ]
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
