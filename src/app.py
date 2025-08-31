@@ -137,14 +137,91 @@ def main():
         ai_chat_tab()
 
 def draft_board_tab():
-    # Initialize session state
-    if 'drafted_players' not in st.session_state:
-        st.session_state.drafted_players = load_state()
+    # Left align with reduced width (40% of total width)
+    col1, col2 = st.columns([4, 6])
+    with col1:
+        # Initialize session state
+        if 'drafted_players' not in st.session_state:
+            st.session_state.drafted_players = load_state()
+        
+        if 'all_players_df' not in st.session_state:
+            st.session_state.all_players_df = load_ratings_files()
+        
+        # Main content area
+        if st.session_state.all_players_df.empty:
+            st.error("No player data found. Please check that rating files exist in the 2025 folder.")
+            return
+        
+        # Get filter values from session state (set by sidebar)
+        position_filter = st.session_state.get('position_filter', ['QB', 'RB', 'WR', 'TE'])
+        search_term = st.session_state.get('search_term', "")
+        
+        # Filter out drafted players
+        available_players = st.session_state.all_players_df[
+            ~st.session_state.all_players_df['Player'].isin(st.session_state.drafted_players)
+        ].copy()
+        
+        # Apply position filter
+        if position_filter:
+            available_players = available_players[
+                available_players['Position'].isin(position_filter)
+            ]
+        
+        # Apply search filter
+        if search_term:
+            available_players = available_players[
+                available_players['Player'].str.contains(search_term, case=False, na=False)
+            ]
+        
+        # Display available players
+        st.header("Available Players")
+        
+        if available_players.empty:
+            st.info("No players available with current filters.")
+        else:
+            # Create columns for the draft board
+            for idx, row in available_players.iterrows():
+                dcol1, dcol2, dcol3, dcol4, dcol5, dcol6 = st.columns([1, 3, 1, 1, 1, 1])
+                
+                with dcol1:
+                    st.write(f"#{row.get('Draft_Order', '')}")
+                
+                with dcol2:
+                    st.write(f"**{row['Player']}**")
+                
+                with dcol3:
+                    # Display position with color coding
+                    position_colors = {
+                        'QB': '🔴',
+                        'RB': '🔵',
+                        'WR': '🟢',
+                        'TE': '🟡'
+                    }
+                    st.write(f"{position_colors.get(row['Position'], '⚪')} {row['Position']}")
+                
+                with dcol4:
+                    if 'Tier' in row:
+                        st.write(f"Tier {row['Tier']}")
+                
+                with dcol5:
+                    if 'ECR' in row and pd.notna(row['ECR']):
+                        st.write(f"ECR: {row['ECR']:.1f}")
+                
+                with dcol6:
+                    # Draft button for each player
+                    if st.button("Draft", key=f"draft_{row['Player']}", type="secondary"):
+                        st.session_state.drafted_players.append(row['Player'])
+                        save_state(st.session_state.drafted_players)
+                        st.rerun()
+        
+        # Show recently drafted players
+        if st.session_state.drafted_players:
+            st.header("Recently Drafted")
+            recent_drafted = st.session_state.drafted_players[-5:][::-1]  # Show last 5, most recent first
+            for player in recent_drafted:
+                st.write(f"✓ {player}")
     
-    if 'all_players_df' not in st.session_state:
-        st.session_state.all_players_df = load_ratings_files()
-    
-    # Sidebar controls
+    # Sidebar controls (keep outside column structure)
     with st.sidebar:
         st.header("Draft Controls")
         
@@ -153,14 +230,14 @@ def draft_board_tab():
             reset_draft()
         
         # Filter by position
-        position_filter = st.multiselect(
+        st.session_state.position_filter = st.multiselect(
             "Filter by Position",
             options=['QB', 'RB', 'WR', 'TE'],
             default=['QB', 'RB', 'WR', 'TE']
         )
         
         # Search player
-        search_term = st.text_input("🔍 Search Player", "")
+        st.session_state.search_term = st.text_input("🔍 Search Player", "")
         
         # Draft statistics
         st.header("Draft Statistics")
@@ -168,84 +245,14 @@ def draft_board_tab():
         drafted_count = len(st.session_state.drafted_players)
         available_count = total_players - drafted_count
         
-        col1, col2 = st.columns(2)
-        with col1:
+        scol1, scol2 = st.columns(2)
+        with scol1:
             st.metric("Total Players", total_players)
             st.metric("Drafted", drafted_count)
-        with col2:
+        with scol2:
             st.metric("Available", available_count)
             progress = drafted_count / total_players if total_players > 0 else 0
             st.progress(progress)
-    
-    # Main content area
-    if st.session_state.all_players_df.empty:
-        st.error("No player data found. Please check that rating files exist in the 2025 folder.")
-        return
-    
-    # Filter out drafted players
-    available_players = st.session_state.all_players_df[
-        ~st.session_state.all_players_df['Player'].isin(st.session_state.drafted_players)
-    ].copy()
-    
-    # Apply position filter
-    if position_filter:
-        available_players = available_players[
-            available_players['Position'].isin(position_filter)
-        ]
-    
-    # Apply search filter
-    if search_term:
-        available_players = available_players[
-            available_players['Player'].str.contains(search_term, case=False, na=False)
-        ]
-    
-    # Display available players
-    st.header("Available Players")
-    
-    if available_players.empty:
-        st.info("No players available with current filters.")
-    else:
-        # Create columns for the draft board
-        for idx, row in available_players.iterrows():
-            col1, col2, col3, col4, col5, col6 = st.columns([1, 3, 1, 1, 1, 1])
-            
-            with col1:
-                st.write(f"#{row.get('Draft_Order', '')}")
-            
-            with col2:
-                st.write(f"**{row['Player']}**")
-            
-            with col3:
-                # Display position with color coding
-                position_colors = {
-                    'QB': '🔴',
-                    'RB': '🔵',
-                    'WR': '🟢',
-                    'TE': '🟡'
-                }
-                st.write(f"{position_colors.get(row['Position'], '⚪')} {row['Position']}")
-            
-            with col4:
-                if 'Tier' in row:
-                    st.write(f"Tier {row['Tier']}")
-            
-            with col5:
-                if 'ECR' in row and pd.notna(row['ECR']):
-                    st.write(f"ECR: {row['ECR']:.1f}")
-            
-            with col6:
-                # Draft button for each player
-                if st.button("Draft", key=f"draft_{row['Player']}", type="secondary"):
-                    st.session_state.drafted_players.append(row['Player'])
-                    save_state(st.session_state.drafted_players)
-                    st.rerun()
-    
-    # Show recently drafted players
-    if st.session_state.drafted_players:
-        st.header("Recently Drafted")
-        recent_drafted = st.session_state.drafted_players[-5:][::-1]  # Show last 5, most recent first
-        for player in recent_drafted:
-            st.write(f"✓ {player}")
 
 def player_stats_tab():
     st.header("📊 Historical Player Stats (2018-2024)")
@@ -364,57 +371,60 @@ def get_ai_response(user_message):
         return f"API error: {e}"
 
 def ai_chat_tab():
-    st.header("🤖 AI Fantasy Football Assistant")
-    
-    # Initialize chat history in session state
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = []
-    
-    # Chat input
-    user_input = st.text_area(
-        "Ask me anything about fantasy football:",
-        placeholder="e.g., Should I draft a RB or WR in the first round? What do you think about Patrick Mahomes this season?",
-        height=100
-    )
-    
-    # Send button
-    col1, col2 = st.columns([1, 4])
+    # Left align with reduced width (40% of total width)
+    col1, col2 = st.columns([4, 6])
     with col1:
-        if st.button("Send", type="primary", use_container_width=True):
-            if user_input.strip():
-                # Add user message to history
-                st.session_state.chat_history.append({"role": "user", "content": user_input})
-                
-                # Get AI response
-                with st.spinner("Getting AI response..."):
-                    ai_response = get_ai_response(user_input)
-                
-                # Add AI response to history
-                st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
-                
-                # Clear input and rerun
-                st.rerun()
-    
-    with col2:
-        if st.button("Clear Chat", use_container_width=True):
-            st.session_state.chat_history = []
-            st.rerun()
-    
-    # Display chat history
-    if st.session_state.chat_history:
-        st.subheader("Conversation")
+        st.header("🤖 AI Fantasy Football Assistant")
         
-        for i, message in enumerate(st.session_state.chat_history):
-            if message["role"] == "user":
-                st.markdown(f"**You:** {message['content']}")
-            else:
-                st.markdown(f"**AI Assistant:** {message['content']}")
+        # Initialize chat history in session state
+        if 'chat_history' not in st.session_state:
+            st.session_state.chat_history = []
+        
+        # Chat input
+        user_input = st.text_area(
+            "Ask me anything about fantasy football:",
+            placeholder="e.g., Should I draft a RB or WR in the first round? What do you think about Patrick Mahomes this season?",
+            height=100
+        )
+        
+        # Send button
+        ccol1, ccol2 = st.columns([1, 4])
+        with ccol1:
+            if st.button("Send", type="primary", use_container_width=True):
+                if user_input.strip():
+                    # Add user message to history
+                    st.session_state.chat_history.append({"role": "user", "content": user_input})
+                    
+                    # Get AI response
+                    with st.spinner("Getting AI response..."):
+                        ai_response = get_ai_response(user_input)
+                    
+                    # Add AI response to history
+                    st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
+                    
+                    # Clear input and rerun
+                    st.rerun()
+        
+        with ccol2:
+            if st.button("Clear Chat", use_container_width=True):
+                st.session_state.chat_history = []
+                st.rerun()
+        
+        # Display chat history
+        if st.session_state.chat_history:
+            st.subheader("Conversation")
             
-            # Add some spacing between messages
-            if i < len(st.session_state.chat_history) - 1:
-                st.markdown("---")
-    else:
-        st.info("Start a conversation by asking a question about fantasy football!")
+            for i, message in enumerate(st.session_state.chat_history):
+                if message["role"] == "user":
+                    st.markdown(f"**You:** {message['content']}")
+                else:
+                    st.markdown(f"**AI Assistant:** {message['content']}")
+                
+                # Add some spacing between messages
+                if i < len(st.session_state.chat_history) - 1:
+                    st.markdown("---")
+        else:
+            st.info("Start a conversation by asking a question about fantasy football!")
 
 if __name__ == "__main__":
     main()
