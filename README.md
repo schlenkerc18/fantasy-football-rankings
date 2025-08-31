@@ -1,37 +1,19 @@
-# Fantasy Football Rankings
-This project aims to create a 2021 ranking of fantasy football players to help players during their fantasy football draft.
+# Fantasy Football Rankings Database & Analytics Platform
 
-I plan to model my 2021 projections based on several factors including statistics from previous seasons, coaching staff, offensive-line ranking, etc.  I will then weight these numbers together to create a ranked list of players in 2021.
+This repository serves as a comprehensive fantasy football database and analytics platform designed to give you a competitive edge in your fantasy league. The main purpose is to maintain an extensive database of fantasy statistics, provide yearly personal rankings from an astute fantasy football player, and present this data through an interactive Streamlit application.
 
-For the time being, I will only focus on offensive players.  Kickers and defenses will not be included in this ranked list.
+## 🏆 Key Features
 
-QB Factors:
-  1. 2019 Season
-  2. Rating of WR's
+- **Comprehensive Stats Database**: Maintains historical and current fantasy football statistics across all positions
+- **Personal Rankings**: Yearly curated rankings from an experienced fantasy football analyst
+- **Interactive Streamlit App**: User-friendly web application to explore stats, rankings, and insights
+- **AI-Powered Chatbot**: Integrated AI assistant to help you make informed fantasy decisions and gain strategic advantages
 
-RB Factors: 
-  1. Past Two Seasons
+## 🚀 What This Platform Offers
 
-WR Factors:
-  1. Past Two Seasons
+**Gain Your Competitive Edge:**
+- Access to meticulously curated personal rankings that go beyond standard projections
+- Historical data analysis to identify trends and breakout candidates
+- Interactive visualizations to explore player performance and matchups
+- AI chatbot assistance for draft strategy, waiver wire pickups, and lineup decisions
 
-TE Factors:
-  1. Past Two Seasons
-
-Current state of project:
-  So far, I have pulled statistics for the 2018, 2019, and 2020 seasons.  I have created simple linear regresssions and multiple linear regressions for each of the posistions listed above.  For the QB position and TE positions, recent seasons are not a reliable predictor of future output.  However, recent seasons for the RB, and WR positions seem to be a generally reliable predictor of future output, especially for the WR position.
-  
-r^2 for simple linear regressions for each position (2019 is used as input, 2020 is dependent variable)
-
-    QB: .32    
-    RB: .42
-    WR: .31
-    TE: .33
-    
-  
-r^2 values for the multiple linear regressions for each position (Feautures of multiple linear regression are listed above for each position)
-
-    QB: .25
-    RB: .63
-    WR: .46
-    TE: .35
